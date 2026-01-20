@@ -1,6 +1,6 @@
-numero_telefono,operador,codigo_corto,tipo_interaccion
-573001234567,Tigo,12345,Click
-573101234567,Movistar,12346,Lectura
-573151234567,Claro,12347,Click
-573201234567,Claro,12348,Entrega
-573001234568,Tigo,12345,Click
+Id Envio;Telefono celular;Total de mensajes;Estado del envio;Operador;Codigo corto
+1001;573001234567;1;Entregado;Tigo;12345
+1002;573101234567;2;Leido;Movistar;12346
+1003;573151234567;1;Fallido;Claro;12347
+1004;573201234567;3;Enviado;Claro;12348
+1005;573001234568;1;Entregado;Tigo;12345
