@@ -11,6 +11,7 @@ import streamlit as st
 from config import (
     SMS_FILE,
     WHATSAPP_FILES,
+    INTERACCIONES_FILE,
     SMS_COLUMNS,
     WHATSAPP_COLUMNS,
     CSV_ENCODING,
@@ -22,6 +23,10 @@ from config import (
 def load_sms_data(sample: bool = True, sample_size: int = 10000) -> pd.DataFrame:
     """Carga datos SMS optimizados."""
     try:
+        if not SMS_FILE.exists():
+            st.warning("No se encontró el archivo SMS. Asegúrate de colocar tus datos en data/mensajes_texto/.")
+            return pd.DataFrame()
+
         dtypes = {
             "Id": "int32",
             "Celular": "category",
@@ -60,17 +65,26 @@ def load_sms_data(sample: bool = True, sample_size: int = 10000) -> pd.DataFrame
 def load_whatsapp_data() -> pd.DataFrame:
     """Carga todos los datos de WhatsApp."""
     try:
+        if not WHATSAPP_FILES:
+            st.warning("No se encontraron archivos de WhatsApp. Coloca tus CSV en data/mensajes_whatsapp/.")
+            return pd.DataFrame()
+
         all_dfs = []
         for wa_file in WHATSAPP_FILES:
+            if not wa_file.exists():
+                continue
             df = pd.read_csv(
                 wa_file,
                 encoding=CSV_ENCODING["whatsapp"],
                 delimiter=DELIMITERS["whatsapp"],
             )
             all_dfs.append(df)
-        
-        combined = pd.concat(all_dfs, ignore_index=True)
-        return combined
+
+        if not all_dfs:
+            st.warning("No se pudieron cargar archivos de WhatsApp.")
+            return pd.DataFrame()
+
+        return pd.concat(all_dfs, ignore_index=True)
     except Exception as e:
         st.warning(f"Error cargando WhatsApp: {e}")
         return pd.DataFrame()
@@ -194,6 +208,8 @@ def get_whatsapp_flow_data() -> Tuple[List, List, List]:
 def count_total_sms_records() -> int:
     """Cuenta total de registros SMS."""
     try:
+        if not SMS_FILE.exists():
+            return 0
         import subprocess
         result = subprocess.run(['wc', '-l', str(SMS_FILE)], 
                               capture_output=True, text=True, timeout=5)
@@ -219,6 +235,8 @@ def count_total_sms_records() -> int:
 def get_sms_states_summary() -> Dict:
     """Obtiene resumen de estados SMS."""
     try:
+        if not SMS_FILE.exists():
+            return {}
         df = pd.read_csv(
             SMS_FILE,
             encoding=CSV_ENCODING["sms"],
@@ -249,6 +267,8 @@ def get_sms_states_summary() -> Dict:
 def get_sms_clicks_stats() -> Dict:
     """Calcula estadísticas de clicks SMS."""
     try:
+        if not SMS_FILE.exists():
+            return {}
         total_sms = count_total_sms_records()
         
         df = pd.read_csv(
@@ -318,12 +338,12 @@ def get_sms_file_size() -> str:
 
 # ============= FUNCIONES PARA ANÁLISIS DE INTERACCIONES =============
 
-INTERACCIONES_FILE = Path(__file__).parent.parent / "data" / "mensajes_texto" / "interacciones.csv"
-
 @st.cache_data
 def count_total_interacciones_records() -> int:
     """Cuenta total de registros en interacciones.csv."""
     try:
+        if not INTERACCIONES_FILE.exists():
+            return 0
         import subprocess
         result = subprocess.run(['wc', '-l', str(INTERACCIONES_FILE)], 
                               capture_output=True, text=True, timeout=5)
@@ -340,6 +360,9 @@ def count_total_interacciones_records() -> int:
 def get_interacciones_data(sample: bool = True, sample_size: int = 10000) -> pd.DataFrame:
     """Carga datos de interacciones."""
     try:
+        if not INTERACCIONES_FILE.exists():
+            st.warning("No se encontró interacciones.csv. Agrega tus datos en data/mensajes_texto/.")
+            return pd.DataFrame()
         nrows = sample_size if sample else None
         
         df = pd.read_csv(
@@ -369,6 +392,8 @@ def get_interacciones_data(sample: bool = True, sample_size: int = 10000) -> pd.
 def get_interacciones_states_summary() -> Dict:
     """Obtiene resumen de estados de interacciones."""
     try:
+        if not INTERACCIONES_FILE.exists():
+            return {}
         total = count_total_interacciones_records()
         
         df = pd.read_csv(

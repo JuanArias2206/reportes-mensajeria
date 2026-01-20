@@ -11,12 +11,30 @@ DATA_DIR = BASE_DIR / "data"
 SMS_DIR = DATA_DIR / "mensajes_texto"
 WHATSAPP_DIR = DATA_DIR / "mensajes_whatsapp"
 
-# Archivos de datos
-SMS_FILE = SMS_DIR / "mensajes_texto.csv"
-WHATSAPP_FILES = [
-    WHATSAPP_DIR / "2026-01-15 Saludo y agradecimiento firmantes_20260119_GMT-05.csv",
-    WHATSAPP_DIR / "2026-01-16 17_57_53_20260119_GMT-05 (1).csv",
-]
+# Archivos de datos con fallback automático a muestras pequeñas
+def _resolve_sms_file() -> Path:
+    principal = SMS_DIR / "mensajes_texto.csv"
+    muestra = SMS_DIR / "mensajes_texto_sample.csv"
+    return principal if principal.exists() else muestra
+
+
+def _resolve_interacciones_file() -> Path:
+    principal = SMS_DIR / "interacciones.csv"
+    muestra = SMS_DIR / "interacciones_sample.csv"
+    return principal if principal.exists() else muestra
+
+
+def _resolve_whatsapp_files() -> List[Path]:
+    files = sorted(WHATSAPP_DIR.glob("*.csv"))
+    if not files:
+        return []
+    reales = [f for f in files if "_sample" not in f.name]
+    return reales if reales else files
+
+
+SMS_FILE = _resolve_sms_file()
+INTERACCIONES_FILE = _resolve_interacciones_file()
+WHATSAPP_FILES = _resolve_whatsapp_files()
 
 # Configuración de lectura de CSV
 CSV_ENCODING = {
