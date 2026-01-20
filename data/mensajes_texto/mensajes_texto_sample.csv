@@ -1,0 +1,6 @@
+estado,numero_telefono,mensaje,url_corta,operador,codigo_corto
+Delivered,573001234567,Mensaje de prueba 1,http://bit.ly/test1,Tigo,12345
+Read,573101234567,Mensaje de prueba 2,http://bit.ly/test2,Movistar,12346
+Failed,573151234567,Mensaje de prueba 3,http://bit.ly/test3,Claro,12347
+Delivered,573201234567,Mensaje de prueba 4,http://bit.ly/test4,Claro,12348
+Sent,573001234568,Mensaje de prueba 5,http://bit.ly/test5,Tigo,12345

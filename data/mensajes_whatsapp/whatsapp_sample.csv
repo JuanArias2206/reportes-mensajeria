@@ -1,0 +1,5 @@
+numero_telefono,estado,mensaje,operador
+573001234567,Entregado,Mensaje WhatsApp 1,Tigo
+573101234567,Fallido,Mensaje WhatsApp 2,Movistar
+573151234567,Procesando,Mensaje WhatsApp 3,Claro
+573201234567,Entregado,Mensaje WhatsApp 4,Claro
